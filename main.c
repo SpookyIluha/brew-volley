@@ -381,12 +381,13 @@ void render(int cur_frame)
     rdpq_mode_filter(FILTER_BILINEAR);
     rdpq_mode_alphacompare(1);
     rdpq_mode_dithering(DITHER_SQUARE_SQUARE);
-    rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
     rdpq_mode_antialias(false);
 
     rdpq_sprite_blit(background_sprite, 0, 0, &(rdpq_blitparms_t){
         .scale_x = 1, .scale_y = 1,
     });
+
+    rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
 
     for (uint32_t i = 0; i < NUM_BLOBS; i++)
     {

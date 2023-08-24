@@ -1,5 +1,6 @@
 TARGET=brew_volley
 BUILD_DIR=build
+FSYSTEM_DIR=filesystem
 include $(N64_INST)/include/n64.mk
 
 src = main.c
@@ -32,7 +33,7 @@ filesystem/%.wav64: assets/%.wav
 filesystem/%.sprite: assets/%.png
 	@mkdir -p $(dir $@)
 	@echo "    [SPRITE] $@"
-	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) --format RGBA32 -o filesystem "$<"
+	@$(N64_MKSPRITE) --format RGBA32 $(MKSPRITE_FLAGS) -o filesystem "$<"
 	
 filesystem/%.font64: assets/%.ttf
 	@mkdir -p $(dir $@)
@@ -40,6 +41,7 @@ filesystem/%.font64: assets/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o filesystem "$<"
 
 filesystem/n64brew.sprite: MKSPRITE_FLAGS=--format RGBA32 --tiles 32,32
+filesystem/background.sprite: MKSPRITE_FLAGS=--format RGBA32 --tiles 32,32
 filesystem/Pacifico.font64: MKFONT_FLAGS+=--size 32
 
 $(BUILD_DIR)/$(TARGET).dfs: $(assets_conv)
@@ -49,7 +51,7 @@ $(TARGET).z64: N64_ROM_TITLE="N64brew GameJam 4"
 $(TARGET).z64: $(BUILD_DIR)/$(TARGET).dfs 
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET).z64
+	rm -rf $(BUILD_DIR) $(FSYSTEM_DIR) $(TARGET).z64
 
 -include $(wildcard $(BUILD_DIR)/*.d)
 
