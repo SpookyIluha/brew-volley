@@ -1,4 +1,4 @@
-TARGET=n64jam4
+TARGET=brew_volley
 BUILD_DIR=build
 include $(N64_INST)/include/n64.mk
 
