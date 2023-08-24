@@ -388,36 +388,6 @@ void render(int cur_frame)
         .scale_x = 1, .scale_y = 1,
     });
 
-    rdpq_text_printf(&(rdpq_textparms_t){
-            .align = ALIGN_CENTER,
-            .valign = VALIGN_TOP,
-            .width = 200,
-            .height = 200,
-            .wrap = WRAP_WORD,
-        }, FONT_PACIFICO, 210, 20, "^00Score:\n %d | %d", scorePlayer1, scorePlayer2);
-
-    int winner = get_winner();
-    if (winner) {
-        rdpq_text_printf(&(rdpq_textparms_t){
-            .align = ALIGN_CENTER,
-            .width = 400,
-        }, FONT_PACIFICO, 120, 180, "^01Player %d WINS!", winner);
-    } else {
-        if (countdown > 0) {
-            rdpq_text_printf(&(rdpq_textparms_t){
-            .align = ALIGN_CENTER,
-            .width = 400,
-            }, FONT_PACIFICO, 120, 180, "^01%d", countdown);
-        }
-    }
-
-    rdpq_set_mode_standard();
-    rdpq_mode_filter(FILTER_BILINEAR);
-    rdpq_mode_alphacompare(1);
-    rdpq_mode_dithering(DITHER_SQUARE_SQUARE);
-    rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
-    rdpq_mode_antialias(false);
-
     for (uint32_t i = 0; i < NUM_BLOBS; i++)
     {
         rdpq_sprite_blit(brew_sprite, blobs[i].x, (int32_t) blobs[i].y, &(rdpq_blitparms_t){
@@ -435,6 +405,30 @@ void render(int cur_frame)
     rdpq_sprite_blit(net_sprite, net.x, net.y, &(rdpq_blitparms_t){
         .scale_x = net.scale_factor, .scale_y = net.scale_factor,
     });
+
+    // draw text
+    rdpq_text_printf(&(rdpq_textparms_t){
+            .align = ALIGN_CENTER,
+            .valign = VALIGN_TOP,
+            .width = 200,
+            .height = 200,
+            .wrap = WRAP_WORD,
+    }, FONT_PACIFICO, 210, 20, "^00Score:\n %d | %d", scorePlayer1, scorePlayer2);
+
+    int winner = get_winner();
+    if (winner) {
+        rdpq_text_printf(&(rdpq_textparms_t){
+            .align = ALIGN_CENTER,
+            .width = 400,
+        }, FONT_PACIFICO, 120, 180, "^01Player %d WINS!", winner);
+    } else {
+        if (countdown > 0) {
+            rdpq_text_printf(&(rdpq_textparms_t){
+            .align = ALIGN_CENTER,
+            .width = 400,
+            }, FONT_PACIFICO, 120, 180, "^01%d", countdown);
+        }
+    }
 
     // Force backbuffer flip
     rdpq_detach_show();
