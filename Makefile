@@ -41,7 +41,7 @@ filesystem/%.font64: assets/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o filesystem "$<"
 
 filesystem/n64brew.sprite: MKSPRITE_FLAGS=--format RGBA32 --tiles 32,32
-filesystem/background_dithered.sprite: MKSPRITE_FLAGS=--format RGBA16 --tiles 32,32
+filesystem/background.sprite: MKSPRITE_FLAGS=--format RGBA16 --tiles 32,32
 filesystem/Pacifico.font64: MKFONT_FLAGS+=--size 32
 
 $(BUILD_DIR)/$(TARGET).dfs: $(assets_conv)

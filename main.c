@@ -474,7 +474,7 @@ int main()
     mixer_ch_set_vol(CHANNEL_MUSIC, 0.55f, 0.55f);
     wav64_play(&sfx_music, CHANNEL_MUSIC);
 
-    background_sprite = sprite_load("rom:/background_dithered.sprite");
+    background_sprite = sprite_load("rom:/background.sprite");
 
     brew_sprite = sprite_load("rom:/n64brew.sprite");
 
