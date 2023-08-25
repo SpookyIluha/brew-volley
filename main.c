@@ -378,6 +378,7 @@ void render(int cur_frame)
     surface_t *disp = display_get();
     rdpq_attach_clear(disp, NULL);
 
+    // Render a background with copy-mode and under an rspq block for optimization purposes
     if(!background_block){
         rspq_block_begin();
 
@@ -386,6 +387,7 @@ void render(int cur_frame)
                 .scale_x = 1, .scale_y = 1,
             });
 
+            // Setup a mode for the rest of the sprites
             rdpq_set_mode_standard();
             rdpq_mode_filter(FILTER_BILINEAR);
             rdpq_mode_alphacompare(1);
@@ -396,6 +398,7 @@ void render(int cur_frame)
         background_block = rspq_block_end();
     } rspq_block_run(background_block);
 
+    // Players
     for (uint32_t i = 0; i < NUM_BLOBS; i++)
     {
         rdpq_sprite_blit(brew_sprite, blobs[i].x, (int32_t) blobs[i].y, &(rdpq_blitparms_t){
@@ -409,12 +412,12 @@ void render(int cur_frame)
     });
 
 
-    // draw net
+    // Draw net
     rdpq_sprite_blit(net_sprite, net.x, net.y, &(rdpq_blitparms_t){
         .scale_x = net.scale_factor, .scale_y = net.scale_factor,
     });
 
-    // draw text
+    // Draw text
     rdpq_text_printf(&(rdpq_textparms_t){
             .align = ALIGN_CENTER,
             .valign = VALIGN_TOP,
