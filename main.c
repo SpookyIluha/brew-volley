@@ -5,6 +5,7 @@ static sprite_t *background_sprite;
 static sprite_t *brew_sprite;
 static sprite_t *ball_sprite;
 static sprite_t *net_sprite;
+static rspq_block_t* background_block;
 
 static wav64_t sfx_hit;
 static wav64_t sfx_halt;
@@ -377,17 +378,23 @@ void render(int cur_frame)
     surface_t *disp = display_get();
     rdpq_attach_clear(disp, NULL);
 
-    rdpq_set_mode_standard();
-    rdpq_mode_filter(FILTER_BILINEAR);
-    rdpq_mode_alphacompare(1);
-    rdpq_mode_dithering(DITHER_SQUARE_SQUARE);
-    rdpq_mode_antialias(false);
+    if(!background_block){
+        rspq_block_begin();
 
-    rdpq_sprite_blit(background_sprite, 0, 0, &(rdpq_blitparms_t){
-        .scale_x = 1, .scale_y = 1,
-    });
+            rdpq_set_mode_copy(false);
+            rdpq_sprite_blit(background_sprite, 0, 0, &(rdpq_blitparms_t){
+                .scale_x = 1, .scale_y = 1,
+            });
 
-    rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
+            rdpq_set_mode_standard();
+            rdpq_mode_filter(FILTER_BILINEAR);
+            rdpq_mode_alphacompare(1);
+            rdpq_mode_dithering(DITHER_SQUARE_SQUARE);
+            rdpq_mode_antialias(false);
+            rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
+
+        background_block = rspq_block_end();
+    } rspq_block_run(background_block);
 
     for (uint32_t i = 0; i < NUM_BLOBS; i++)
     {
@@ -464,10 +471,10 @@ int main()
 
 	wav64_open(&sfx_music, "rom:/music.wav64");
 	wav64_set_loop(&sfx_music, true);
-    mixer_ch_set_vol(CHANNEL_MUSIC, 0.15f, 0.15f);
+    mixer_ch_set_vol(CHANNEL_MUSIC, 0.55f, 0.55f);
     wav64_play(&sfx_music, CHANNEL_MUSIC);
 
-    background_sprite = sprite_load("rom:/background.sprite");
+    background_sprite = sprite_load("rom:/background_dithered.sprite");
 
     brew_sprite = sprite_load("rom:/n64brew.sprite");
 
